@@ -248,23 +248,23 @@ main (int argc, char** argv)
   switch (verbosity_level)
   {
     case 0:
-      pcl::console::setVerbosityLevel(pcl::console::L_ALWAYS);
+      pcl::console::setVerbosityLevel(pcl::console::L_VERBOSE);
       break;
 
     case 1:
-      pcl::console::setVerbosityLevel(pcl::console::L_ERROR);
+      pcl::console::setVerbosityLevel(pcl::console::L_VERBOSE);
       break;
 
     case 2:
-      pcl::console::setVerbosityLevel(pcl::console::L_WARN);
+      pcl::console::setVerbosityLevel(pcl::console::L_VERBOSE);
       break;
 
     case 3:
-      pcl::console::setVerbosityLevel(pcl::console::L_INFO);
+      pcl::console::setVerbosityLevel(pcl::console::L_VERBOSE);
       break;
 
     case 4:
-      pcl::console::setVerbosityLevel(pcl::console::L_DEBUG);
+      pcl::console::setVerbosityLevel(pcl::console::L_VERBOSE);
       break;
 
     default:

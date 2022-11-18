@@ -26,12 +26,12 @@ namespace pcl
 
   inline std::ostream& operator<<(std::ostream& s, const  ::pcl::ModelCoefficients & v)
   {
-    s << "header: " << std::endl;
+    s << "header_i: " << std::endl;
     s << v.header;
-    s << "values[]" << std::endl;
+    s << "values_i[]" << std::endl;
     for (std::size_t i = 0; i < v.values.size (); ++i)
     {
-      s << "  values[" << i << "]: ";
+      s << "  values_i[" << i << "]: ";
       s << "  " << v.values[i] << std::endl;
     }
     return (s);

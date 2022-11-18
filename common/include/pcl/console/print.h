@@ -46,19 +46,19 @@
 // PCL_INFO_STREAM("Info: this is a point: " << pcl::PointXYZ(1.0, 2.0, 3.0) << std::endl);
 // PCL_ERROR_STREAM("Error: an Eigen vector: " << std::endl << Eigen::Vector3f(1.0, 2.0, 3.0) << std::endl);
 #define PCL_LOG_STREAM(LEVEL, STREAM, CSTR, ATTR, FG, ARGS) if(pcl::console::isVerbosityLevelEnabled(pcl::console::LEVEL)) { fflush(stdout); pcl::console::change_text_color(CSTR, pcl::console::ATTR, pcl::console::FG); STREAM << ARGS; pcl::console::reset_text_color(CSTR); }
-#define PCL_ALWAYS_STREAM(ARGS)  PCL_LOG_STREAM(L_ALWAYS,  std::cout, stdout, TT_RESET,  TT_WHITE,  ARGS)
-#define PCL_ERROR_STREAM(ARGS)   PCL_LOG_STREAM(L_ERROR,   std::cerr, stderr, TT_BRIGHT, TT_RED,    ARGS)
-#define PCL_WARN_STREAM(ARGS)    PCL_LOG_STREAM(L_WARN,    std::cerr, stderr, TT_BRIGHT, TT_YELLOW, ARGS)
-#define PCL_INFO_STREAM(ARGS)    PCL_LOG_STREAM(L_INFO,    std::cout, stdout, TT_RESET,  TT_WHITE,  ARGS)
-#define PCL_DEBUG_STREAM(ARGS)   PCL_LOG_STREAM(L_DEBUG,   std::cout, stdout, TT_RESET,  TT_GREEN,  ARGS)
+#define PCL_ALWAYS_STREAM(ARGS)  PCL_LOG_STREAM(L_VERBOSE,  std::cout, stdout, TT_RESET,  TT_WHITE,  ARGS)
+#define PCL_ERROR_STREAM(ARGS)   PCL_LOG_STREAM(L_VERBOSE,   std::cerr, stderr, TT_BRIGHT, TT_RED,    ARGS)
+#define PCL_WARN_STREAM(ARGS)    PCL_LOG_STREAM(L_VERBOSE,    std::cerr, stderr, TT_BRIGHT, TT_YELLOW, ARGS)
+#define PCL_INFO_STREAM(ARGS)    PCL_LOG_STREAM(L_VERBOSE,    std::cout, stdout, TT_RESET,  TT_WHITE,  ARGS)
+#define PCL_DEBUG_STREAM(ARGS)   PCL_LOG_STREAM(L_VERBOSE,   std::cout, stdout, TT_RESET,  TT_GREEN,  ARGS)
 #define PCL_VERBOSE_STREAM(ARGS) PCL_LOG_STREAM(L_VERBOSE, std::cout, stdout, TT_RESET,  TT_WHITE,  ARGS)
 
 
-#define PCL_ALWAYS(...)  pcl::console::print (pcl::console::L_ALWAYS, __VA_ARGS__)
-#define PCL_ERROR(...)   pcl::console::print (pcl::console::L_ERROR, __VA_ARGS__)
-#define PCL_WARN(...)    pcl::console::print (pcl::console::L_WARN, __VA_ARGS__)
-#define PCL_INFO(...)    pcl::console::print (pcl::console::L_INFO, __VA_ARGS__)
-#define PCL_DEBUG(...)   pcl::console::print (pcl::console::L_DEBUG, __VA_ARGS__)
+#define PCL_ALWAYS(...)  pcl::console::print (pcl::console::L_VERBOSE, __VA_ARGS__)
+#define PCL_ERROR(...)   pcl::console::print (pcl::console::L_VERBOSE, __VA_ARGS__)
+#define PCL_WARN(...)    pcl::console::print (pcl::console::L_VERBOSE, __VA_ARGS__)
+#define PCL_INFO(...)    pcl::console::print (pcl::console::L_VERBOSE, __VA_ARGS__)
+#define PCL_DEBUG(...)   pcl::console::print (pcl::console::L_VERBOSE, __VA_ARGS__)
 #define PCL_VERBOSE(...) pcl::console::print (pcl::console::L_VERBOSE, __VA_ARGS__)
 
 #define PCL_ASSERT_ERROR_PRINT_CHECK(pred, msg) \

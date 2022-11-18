@@ -67,7 +67,7 @@ selfTest ()
   data->points.emplace_back(7,4,0);
   data->points.emplace_back(9,6,0);
 
-  pcl::console::setVerbosityLevel (pcl::console::L_DEBUG);  
+  pcl::console::setVerbosityLevel (pcl::console::L_VERBOSE);  
   
   pcl::NormalDistributionsTransform2D<PointType, PointType> ndt;
 

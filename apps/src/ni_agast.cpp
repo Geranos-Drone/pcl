@@ -346,9 +346,9 @@ main(int argc, char** argv)
   bool debug = false;
   pcl::console::parse_argument(argc, argv, "-debug", debug);
   if (debug)
-    pcl::console::setVerbosityLevel(pcl::console::L_DEBUG);
+    pcl::console::setVerbosityLevel(pcl::console::L_VERBOSE);
   else
-    pcl::console::setVerbosityLevel(pcl::console::L_INFO);
+    pcl::console::setVerbosityLevel(pcl::console::L_VERBOSE);
 
   std::string device_id("#1");
   OpenNIGrabber grabber(device_id);

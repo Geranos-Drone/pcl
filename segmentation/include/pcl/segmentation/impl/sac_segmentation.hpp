@@ -52,7 +52,6 @@
 #include <pcl/sample_consensus/rmsac.h>
 #include <pcl/sample_consensus/rransac.h>
 #include <pcl/sample_consensus/prosac.h>
-
 // Sample Consensus models
 #include <pcl/sample_consensus/sac_model.h>
 #include <pcl/sample_consensus/sac_model_circle.h>
@@ -88,6 +87,7 @@ pcl::SACSegmentation<PointT>::segment (PointIndices &inliers, ModelCoefficients 
   // Initialize the Sample Consensus model and set its parameters
   if (!initSACModel (model_type_))
   {
+    pcl::console::print_error ("[addPointCloudPrincipalCurvatures] The number of points differs from the number of principal curvatures/normals!\n");
     PCL_ERROR ("[pcl::%s::segment] Error initializing the SAC model!\n", getClassName ().c_str ());
     deinitCompute ();
     inliers.indices.clear (); model_coefficients.values.clear ();
@@ -142,6 +142,7 @@ pcl::SACSegmentation<PointT>::initSACModel (const int model_type)
   {
     case SACMODEL_PLANE:
     {
+      pcl::console::print_error ("[addPointCloudPrincipalCurvatures] The number of points differs from the number of principal curvatures/normals!\n");
       PCL_DEBUG ("[pcl::%s::initSACModel] Using a model of type: SACMODEL_PLANE\n", getClassName ().c_str ());
       model_.reset (new SampleConsensusModelPlane<PointT> (input_, *indices_, random_));
       break;
@@ -377,6 +378,11 @@ pcl::SACSegmentationFromNormals<PointT, PointNT>::initSACModel (const int model_
   {
     case SACMODEL_CYLINDER:
     {
+      
+      std::cerr << "header_i: " << std::endl;
+      std::cout << "values_i[]" << std::endl;
+
+      pcl::console::print_error ("[addPointCloudPrincipalCurvatures] The number of points differs from the number of principal curvatures/normals!\n");
       PCL_DEBUG ("[pcl::%s::initSACModel] Using a model of type: SACMODEL_CYLINDER\n", getClassName ().c_str ());
       model_.reset (new SampleConsensusModelCylinder<PointT, PointNT > (input_, *indices_, random_));
       typename SampleConsensusModelCylinder<PointT, PointNT>::Ptr model_cylinder = static_pointer_cast<SampleConsensusModelCylinder<PointT, PointNT> > (model_);
