@@ -387,7 +387,7 @@ pcl::PCDReader::readHeader (const std::string &file_name, pcl::PCLPointCloud2 &c
 {
   if (file_name.empty() || !boost::filesystem::exists (file_name))
   {
-    PCL_ERROR ("[pcl::PCDReader::readHeader] Could not find file '%s'.\n", file_name.c_str ());
+    PCL_ERROR ("[pcl::PCDReader::readHeader] Could not find file xxy '%s'.\n", file_name.c_str ());
     return (-1);
   }
 
@@ -654,7 +654,7 @@ pcl::PCDReader::read (const std::string &file_name, pcl::PCLPointCloud2 &cloud,
 
   if (file_name.empty() || !boost::filesystem::exists (file_name))
   {
-    PCL_ERROR ("[pcl::PCDReader::read] Could not find file '%s'.\n", file_name.c_str ());
+    PCL_ERROR ("[pcl::PCDReader::read] Could not find file xyz '%s'.\n", file_name.c_str ());
     return (-1);
   }
 

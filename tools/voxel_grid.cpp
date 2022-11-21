@@ -119,6 +119,8 @@ saveCloud (const std::string &filename, const pcl::PCLPointCloud2 &output)
 int
 main (int argc, char** argv)
 {
+  std::cout << "maybe hopefully - tools "<< std::endl;
+  
   print_info ("Downsample a cloud using pcl::VoxelGrid. For more information, use: %s -h\n", argv[0]);
 
   if (argc < 3)

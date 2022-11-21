@@ -87,6 +87,7 @@ pcl::SACSegmentation<PointT>::segment (PointIndices &inliers, ModelCoefficients 
   // Initialize the Sample Consensus model and set its parameters
   if (!initSACModel (model_type_))
   {
+    std::cerr << "helppppp" << std::endl;
     pcl::console::print_error ("[addPointCloudPrincipalCurvatures] The number of points differs from the number of principal curvatures/normals!\n");
     PCL_ERROR ("[pcl::%s::segment] Error initializing the SAC model!\n", getClassName ().c_str ());
     deinitCompute ();
@@ -391,26 +392,7 @@ pcl::SACSegmentationFromNormals<PointT, PointNT>::initSACModel (const int model_
       model_cylinder->setInputNormals (normals_);
       double min_radius, max_radius;
       model_cylinder->getRadiusLimits (min_radius, max_radius);
-      if (radius_min_ != min_radius && radius_max_ != max_radius)
-      {
-        PCL_DEBUG ("[pcl::%s::initSACModel] Setting radius limits to %f/%f\n", getClassName ().c_str (), radius_min_, radius_max_);
-        model_cylinder->setRadiusLimits (radius_min_, radius_max_);
-      }
-      if (distance_weight_ != model_cylinder->getNormalDistanceWeight ())
-      {
-        PCL_DEBUG ("[pcl::%s::initSACModel] Setting normal distance weight to %f\n", getClassName ().c_str (), distance_weight_);
-        model_cylinder->setNormalDistanceWeight (distance_weight_);
-      }
-      if (axis_ != Eigen::Vector3f::Zero () && model_cylinder->getAxis () != axis_)
-      {
-        PCL_DEBUG ("[pcl::%s::initSACModel] Setting the axis to %f, %f, %f\n", getClassName ().c_str (), axis_[0], axis_[1], axis_[2]);
-        model_cylinder->setAxis (axis_);
-      }
-      if (eps_angle_ != 0.0 && model_cylinder->getEpsAngle () != eps_angle_)
-      {
-        PCL_DEBUG ("[pcl::%s::initSACModel] Setting the epsilon angle to %f (%f degrees)\n", getClassName ().c_str (), eps_angle_, eps_angle_ * 180.0 / M_PI);
-        model_cylinder->setEpsAngle (eps_angle_);
-      }
+
       break;
     }
     case SACMODEL_NORMAL_PLANE:
