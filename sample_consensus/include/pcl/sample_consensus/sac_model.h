@@ -526,16 +526,20 @@ namespace pcl
       virtual bool
       isModelValid (const Eigen::VectorXf &model_coefficients) const
       {
+        std::cerr << "isModelValid 1";
         if (model_coefficients.size () != model_size_)
         {
           PCL_ERROR ("[pcl::%s::isModelValid] Invalid number of model coefficients given (is %lu, should be %lu)!\n", getClassName ().c_str (), model_coefficients.size (), model_size_);
           return (false);
         }
+        std::cerr << "isModelValid 2";     
+        /*  
         if (!custom_model_constraints_(model_coefficients))
         {
           PCL_DEBUG ("[pcl::%s::isModelValid] The user defined isModelValid function returned false.\n", getClassName ().c_str ());
           return (false);
-        }
+        }*/
+        std::cerr << "isModelValid 3";
         return (true);
       }
 

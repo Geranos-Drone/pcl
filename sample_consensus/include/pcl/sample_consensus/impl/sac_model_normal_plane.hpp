@@ -106,15 +106,17 @@ template <typename PointT, typename PointNT> std::size_t
 pcl::SampleConsensusModelNormalPlane<PointT, PointNT>::countWithinDistance (
       const Eigen::VectorXf &model_coefficients, const double threshold) const
 {
+  std::cerr << "sac_model_normal_plane 1";
   if (!normals_)
   {
     PCL_ERROR ("[pcl::SampleConsensusModelNormalPlane::countWithinDistance] No input dataset containing normals was given!\n");
     return (0);
   }
-
+  std::cerr << "sac_model_normal_plane 2";
   // Check if the model is valid given the user constraints
   if (!isModelValid (model_coefficients))
     return (0);
+  std::cerr << "sac_model_normal_plane 3";
 
 #if defined (__AVX__) && defined (__AVX2__)
   return countWithinDistanceAVX (model_coefficients, threshold);

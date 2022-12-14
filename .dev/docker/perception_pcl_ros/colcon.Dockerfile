@@ -4,7 +4,7 @@ ARG flavor="dashing"
 FROM ros:${flavor}-ros-base
 
 ARG flavor="dashing"
-ARG workspace="/root/catkin_ws"
+ARG workspace="/root/catkinws"
 
 COPY ${flavor}_rosinstall.yaml ${workspace}/src/.rosinstall
 

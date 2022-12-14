@@ -4,7 +4,7 @@ ARG flavor="melodic"
 FROM ros:${flavor}-robot
 
 ARG flavor="melodic"
-ARG workspace="/root/catkin_ws"
+ARG workspace="/root/catkinws"
 
 COPY ${flavor}_rosinstall.yaml ${workspace}/src/.rosinstall
 

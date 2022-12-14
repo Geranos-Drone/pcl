@@ -95,14 +95,19 @@ pcl::SACSegmentation<PointT>::segment (PointIndices &inliers, ModelCoefficients 
   }
   // Initialize the Sample Consensus method and set its parameters
   initSAC (method_type_);
+  std::cerr << "okay" << std::endl;
+  sac_->computeModel (0);
+  std::cerr << "okay 1" << std::endl;
 
   if (!sac_->computeModel (0))
   {
+    std::cerr << "wrong" << std::endl;
     PCL_ERROR ("[pcl::%s::segment] Error segmenting the model! No solution found.\n", getClassName ().c_str ());
     deinitCompute ();
     inliers.indices.clear (); model_coefficients.values.clear ();
     return;
   }
+  std::cerr << "right";
 
   // Get the model inliers
   sac_->getInliers (inliers.indices);

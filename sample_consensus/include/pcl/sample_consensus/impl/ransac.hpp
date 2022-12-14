@@ -56,6 +56,7 @@
 template <typename PointT> bool
 pcl::RandomSampleConsensus<PointT>::computeModel (int)
 {
+  std::cerr << "start ransac.hpp";
   // Warn and exit if no threshold was set
   if (threshold_ == std::numeric_limits<double>::max())
   {
@@ -79,6 +80,7 @@ pcl::RandomSampleConsensus<PointT>::computeModel (int)
   const unsigned max_skip = max_iterations_ * 10;
 
   int threads = threads_;
+
   if (threads >= 0)
   {
 #if OPENMP_AVAILABLE_RANSAC
@@ -105,6 +107,7 @@ pcl::RandomSampleConsensus<PointT>::computeModel (int)
     else
 #endif
       PCL_DEBUG ("[pcl::RandomSampleConsensus::computeModel] Computing not parallel.\n");
+    std::cerr << "start ransac.hpp 109";
 
     // Iterate
     while (true) // infinite loop with four possible breaks
@@ -122,6 +125,7 @@ pcl::RandomSampleConsensus<PointT>::computeModel (int)
         PCL_ERROR ("[pcl::RandomSampleConsensus::computeModel] No samples could be selected!\n");
         break;
       }
+      std::cerr << "start ransac.hpp 127" << std::endl;
 
       // Search for inliers in the point cloud for the current plane model M
       if (!sac_model_->computeModelCoefficients (selection, model_coefficients)) // This function has to be thread-safe
@@ -192,17 +196,24 @@ pcl::RandomSampleConsensus<PointT>::computeModel (int)
 #else
       PCL_DEBUG ("[pcl::RandomSampleConsensus::computeModel] Trial %d out of %f: %u inliers (best is: %u so far).\n", iterations_tmp, k_tmp, n_inliers_count, n_best_inliers_count_tmp);
 #endif
-      if (iterations_tmp > k_tmp)
+      if (iterations_tmp > k_tmp) {
+        std::cerr << "start ransac.hpp 205";
         break;
+      }
       if (iterations_tmp > max_iterations_)
       {
+        std::cerr << "start ransac.hpp 208";
         PCL_DEBUG ("[pcl::RandomSampleConsensus::computeModel] RANSAC reached the maximum number of trials.\n");
         break;
       }
-    } // while
-  } // omp parallel
+    } // while 
+    std::cerr << "start ransac.hpp 215";
+  } // omp parallel 
+  std::cerr << "start ransac.hpp 218";
 
   PCL_DEBUG ("[pcl::RandomSampleConsensus::computeModel] Model: %lu size, %u inliers.\n", model_.size (), n_best_inliers_count);
+  
+  std::cerr << "start ransac.hpp 221";
 
   if (model_.empty ())
   {
@@ -210,9 +221,12 @@ pcl::RandomSampleConsensus<PointT>::computeModel (int)
     inliers_.clear ();
     return (false);
   }
+  
+  std::cerr << "start ransac.hpp 229";
 
   // Get the set of inliers that correspond to the best model found so far
   sac_model_->selectWithinDistance (model_coefficients_, threshold_, inliers_);
+  std::cerr << "start ransac.hpp 233";
   return (true);
 }
 
