@@ -250,6 +250,9 @@ namespace pcl
       virtual void 
       segment (PointIndices &inliers, ModelCoefficients &model_coefficients);
 
+      virtual void 
+      segment_several (PointIndices &inliers_0, PointIndices &inliers_1, PointIndices &inliers_2, PointIndices &inliers_3, PointIndices &inliers_4, PointIndices &inliers_5, PointIndices &inliers_6, ModelCoefficients &model_coefficients_0, ModelCoefficients &model_coefficients_1, ModelCoefficients &model_coefficients_2, ModelCoefficients &model_coefficients_3, ModelCoefficients &model_coefficients_4, ModelCoefficients &model_coefficients_5, ModelCoefficients &model_coefficients_6);
+      
     protected:
       /** \brief Initialize the Sample Consensus model and set its parameters.
         * \param[in] model_type the type of SAC model that is to be used

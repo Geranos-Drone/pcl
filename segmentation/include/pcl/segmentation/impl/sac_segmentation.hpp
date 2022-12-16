@@ -52,6 +52,7 @@
 #include <pcl/sample_consensus/rmsac.h>
 #include <pcl/sample_consensus/rransac.h>
 #include <pcl/sample_consensus/prosac.h>
+
 // Sample Consensus models
 #include <pcl/sample_consensus/sac_model.h>
 #include <pcl/sample_consensus/sac_model_circle.h>
@@ -68,6 +69,7 @@
 #include <pcl/sample_consensus/sac_model_sphere.h>
 #include <pcl/sample_consensus/sac_model_normal_sphere.h>
 #include <pcl/sample_consensus/sac_model_stick.h>
+#include <vector>
 
 #include <pcl/memory.h>  // for static_pointer_cast
 
@@ -87,8 +89,6 @@ pcl::SACSegmentation<PointT>::segment (PointIndices &inliers, ModelCoefficients 
   // Initialize the Sample Consensus model and set its parameters
   if (!initSACModel (model_type_))
   {
-    std::cerr << "helppppp" << std::endl;
-    pcl::console::print_error ("[addPointCloudPrincipalCurvatures] The number of points differs from the number of principal curvatures/normals!\n");
     PCL_ERROR ("[pcl::%s::segment] Error initializing the SAC model!\n", getClassName ().c_str ());
     deinitCompute ();
     inliers.indices.clear (); model_coefficients.values.clear ();
@@ -131,6 +131,216 @@ pcl::SACSegmentation<PointT>::segment (PointIndices &inliers, ModelCoefficients 
   deinitCompute ();
 }
 
+template <typename PointT> void
+pcl::SACSegmentation<PointT>::segment_several (PointIndices &inliers_0, PointIndices &inliers_1, PointIndices &inliers_2, PointIndices &inliers_3, PointIndices &inliers_4, PointIndices &inliers_5, PointIndices &inliers_6, ModelCoefficients &model_coefficients_0, ModelCoefficients &model_coefficients_1, ModelCoefficients &model_coefficients_2, ModelCoefficients &model_coefficients_3, ModelCoefficients &model_coefficients_4, ModelCoefficients &model_coefficients_5, ModelCoefficients &model_coefficients_6) {
+    // Copy the header information
+  inliers_0.header = model_coefficients_0.header = input_->header;
+  inliers_1.header = model_coefficients_1.header = input_->header;
+  inliers_2.header = model_coefficients_2.header = input_->header;
+  inliers_3.header = model_coefficients_3.header = input_->header;
+  inliers_4.header = model_coefficients_4.header = input_->header;
+  inliers_5.header = model_coefficients_5.header = input_->header;
+  inliers_6.header = model_coefficients_6.header = input_->header;
+
+  if (!initCompute ()) 
+  {
+    inliers_0.indices.clear (); model_coefficients_0.values.clear ();
+    inliers_1.indices.clear (); model_coefficients_1.values.clear ();
+    inliers_2.indices.clear (); model_coefficients_2.values.clear ();
+    inliers_3.indices.clear (); model_coefficients_3.values.clear ();
+    inliers_4.indices.clear (); model_coefficients_4.values.clear ();
+    inliers_5.indices.clear (); model_coefficients_5.values.clear ();
+    inliers_6.indices.clear (); model_coefficients_6.values.clear ();
+    return;
+  }
+
+  // Initialize the Sample Consensus model and set its parameters
+  if (!initSACModel (model_type_))
+  {
+    PCL_ERROR ("[pcl::%s::segment] Error initializing the SAC model!\n", getClassName ().c_str ());
+    deinitCompute ();
+    inliers_0.indices.clear (); model_coefficients_0.values.clear ();
+    inliers_1.indices.clear (); model_coefficients_1.values.clear ();
+    inliers_2.indices.clear (); model_coefficients_2.values.clear ();
+    inliers_3.indices.clear (); model_coefficients_3.values.clear ();
+    inliers_4.indices.clear (); model_coefficients_4.values.clear ();
+    inliers_5.indices.clear (); model_coefficients_5.values.clear ();
+    inliers_6.indices.clear (); model_coefficients_6.values.clear ();
+    return;
+  }
+  // Initialize the Sample Consensus method and set its parameters
+  initSAC (method_type_);
+
+  if (!sac_->computeModel (0))
+  {
+    PCL_ERROR ("[pcl::%s::segment] Error segmenting the model! No solution found.\n", getClassName ().c_str ());
+    deinitCompute ();
+    inliers_0.indices.clear (); model_coefficients_0.values.clear ();
+    inliers_1.indices.clear (); model_coefficients_1.values.clear ();
+    inliers_2.indices.clear (); model_coefficients_2.values.clear ();
+    inliers_3.indices.clear (); model_coefficients_3.values.clear ();
+    inliers_4.indices.clear (); model_coefficients_4.values.clear ();
+    inliers_5.indices.clear (); model_coefficients_5.values.clear ();
+    inliers_6.indices.clear (); model_coefficients_6.values.clear ();
+    return;
+  }  
+
+  // Get the model inliers
+  sac_->getInliers_cylinder (inliers_0.indices,inliers_1.indices,inliers_2.indices,inliers_3.indices,inliers_4.indices,inliers_5.indices,inliers_6.indices);
+
+  // Get the model coefficients
+  Eigen::VectorXf coeff_0 (model_->getModelSize ());
+  Eigen::VectorXf coeff_1 (model_->getModelSize ());
+  Eigen::VectorXf coeff_2 (model_->getModelSize ());
+  Eigen::VectorXf coeff_3 (model_->getModelSize ());
+  Eigen::VectorXf coeff_4 (model_->getModelSize ());
+  Eigen::VectorXf coeff_5 (model_->getModelSize ());
+  Eigen::VectorXf coeff_6 (model_->getModelSize ()); 
+  sac_->getModelCoefficients_cylinder (coeff_0,coeff_1,coeff_2,coeff_3,coeff_4,coeff_5,coeff_6);
+
+  Eigen::VectorXf coeff_refined_0 (model_->getModelSize ());
+  Eigen::VectorXf coeff_refined_1 (model_->getModelSize ());
+  Eigen::VectorXf coeff_refined_2 (model_->getModelSize ());
+  Eigen::VectorXf coeff_refined_3 (model_->getModelSize ());
+  Eigen::VectorXf coeff_refined_4 (model_->getModelSize ());
+  Eigen::VectorXf coeff_refined_5 (model_->getModelSize ());
+  Eigen::VectorXf coeff_refined_6 (model_->getModelSize ());
+
+  //check if any vector empty
+  //first transform in std::vector to check condition
+  std::vector<float> myvector_0(&coeff_0[0], coeff_0.data()+coeff_0.cols()*coeff_0.rows());
+  std::vector<float> myvector_1(&coeff_1[0], coeff_1.data()+coeff_1.cols()*coeff_1.rows());
+  std::vector<float> myvector_2(&coeff_2[0], coeff_2.data()+coeff_2.cols()*coeff_2.rows());
+  std::vector<float> myvector_3(&coeff_3[0], coeff_3.data()+coeff_3.cols()*coeff_3.rows());
+  std::vector<float> myvector_4(&coeff_4[0], coeff_4.data()+coeff_4.cols()*coeff_4.rows());
+  std::vector<float> myvector_5(&coeff_5[0], coeff_5.data()+coeff_5.cols()*coeff_5.rows());
+  std::vector<float> myvector_6(&coeff_6[0], coeff_6.data()+coeff_6.cols()*coeff_6.rows());
+
+  //Vector 0
+  if (myvector_0.empty())
+  {
+    inliers_0.indices.clear (); model_coefficients_0.values.clear ();
+  }
+  else if(optimize_coefficients_) {
+    model_->optimizeModelCoefficients (inliers_0.indices, coeff_0, coeff_refined_0);
+    model_coefficients_0.values.resize (coeff_refined_0.size ());
+    memcpy (&model_coefficients_0.values[0], &coeff_refined_0[0], coeff_refined_0.size () * sizeof (float));
+    // Refine inliers
+    model_->selectWithinDistance (coeff_refined_0, threshold_, inliers_0.indices);
+  }
+  else {
+    model_coefficients_0.values.resize (coeff_0.size ());
+    memcpy (&model_coefficients_0.values[0], &coeff_0[0], coeff_0.size () * sizeof (float));
+  }
+
+  //Vector 1
+  if (myvector_1.empty())
+  {
+    inliers_1.indices.clear (); model_coefficients_1.values.clear ();
+  }
+  else if(optimize_coefficients_) {
+    model_->optimizeModelCoefficients (inliers_1.indices, coeff_1, coeff_refined_1);
+    model_coefficients_1.values.resize (coeff_refined_1.size ());
+    memcpy (&model_coefficients_1.values[0], &coeff_refined_1[0], coeff_refined_1.size () * sizeof (float));
+    // Refine inliers
+    model_->selectWithinDistance (coeff_refined_1, threshold_, inliers_1.indices);
+  }
+  else {
+    model_coefficients_1.values.resize (coeff_1.size ());
+    memcpy (&model_coefficients_1.values[0], &coeff_1[0], coeff_1.size () * sizeof (float));
+  }
+
+  //Vector 2
+  if (myvector_2.empty())
+  {
+    inliers_2.indices.clear (); model_coefficients_2.values.clear ();
+  }
+  else if(optimize_coefficients_) {
+    model_->optimizeModelCoefficients (inliers_2.indices, coeff_2, coeff_refined_2);
+    model_coefficients_2.values.resize (coeff_refined_2.size ());
+    memcpy (&model_coefficients_2.values[0], &coeff_refined_2[0], coeff_refined_2.size () * sizeof (float));
+    // Refine inliers
+    model_->selectWithinDistance (coeff_refined_2, threshold_, inliers_2.indices);
+  }
+  else {
+    model_coefficients_2.values.resize (coeff_2.size ());
+    memcpy (&model_coefficients_2.values[0], &coeff_2[0], coeff_2.size () * sizeof (float));
+  }
+
+  //Vector 3
+  if (myvector_3.empty())
+  {
+    inliers_3.indices.clear (); model_coefficients_3.values.clear ();
+  }
+  else if(optimize_coefficients_) {
+    model_->optimizeModelCoefficients (inliers_3.indices, coeff_3, coeff_refined_3);
+    model_coefficients_3.values.resize (coeff_refined_3.size ());
+    memcpy (&model_coefficients_3.values[0], &coeff_refined_3[0], coeff_refined_3.size () * sizeof (float));
+    // Refine inliers
+    model_->selectWithinDistance (coeff_refined_3, threshold_, inliers_3.indices);
+  }
+  else {
+    model_coefficients_3.values.resize (coeff_3.size ());
+    memcpy (&model_coefficients_3.values[0], &coeff_3[0], coeff_3.size () * sizeof (float));
+  }
+
+  //Vector 4
+  if (myvector_4.empty())
+  {
+    inliers_4.indices.clear (); model_coefficients_4.values.clear ();
+  }
+  else if(optimize_coefficients_) {
+    model_->optimizeModelCoefficients (inliers_4.indices, coeff_4, coeff_refined_4);
+    model_coefficients_4.values.resize (coeff_refined_4.size ());
+    memcpy (&model_coefficients_4.values[0], &coeff_refined_4[0], coeff_refined_4.size () * sizeof (float));
+    // Refine inliers
+    model_->selectWithinDistance (coeff_refined_4, threshold_, inliers_4.indices);
+  }
+  else {
+    model_coefficients_4.values.resize (coeff_4.size ());
+    memcpy (&model_coefficients_4.values[0], &coeff_4[0], coeff_4.size () * sizeof (float));
+  }
+
+  //Vector 5
+  if (myvector_5.empty())
+  {
+    inliers_5.indices.clear (); model_coefficients_5.values.clear ();
+  }
+  else if(optimize_coefficients_) {
+    model_->optimizeModelCoefficients (inliers_5.indices, coeff_5, coeff_refined_5);
+    model_coefficients_5.values.resize (coeff_refined_5.size ());
+    memcpy (&model_coefficients_5.values[0], &coeff_refined_5[0], coeff_refined_5.size () * sizeof (float));
+    // Refine inliers
+    model_->selectWithinDistance (coeff_refined_5, threshold_, inliers_5.indices);
+  }
+  else {
+    model_coefficients_5.values.resize (coeff_5.size ());
+    memcpy (&model_coefficients_5.values[0], &coeff_5[0], coeff_5.size () * sizeof (float));
+  }
+
+  //Vector 6
+  if (myvector_6.empty())
+  {
+    inliers_6.indices.clear (); model_coefficients_6.values.clear ();
+  }
+  else if(optimize_coefficients_) {
+    model_->optimizeModelCoefficients (inliers_6.indices, coeff_6, coeff_refined_6);
+    model_coefficients_6.values.resize (coeff_refined_6.size ());
+    memcpy (&model_coefficients_6.values[0], &coeff_refined_6[0], coeff_refined_6.size () * sizeof (float));
+    // Refine inliers
+    model_->selectWithinDistance (coeff_refined_6, threshold_, inliers_6.indices);
+  }
+  else {
+    model_coefficients6_.values.resize (coeff_6.size ());
+    memcpy (&model_coefficients_6.values[0], &coeff_6[0], coeff_6.size () * sizeof (float));
+  } 
+
+  //BLABLA More to come
+  std::cerr << "sac_segmentation.hpp segment done" << std::endl;
+  deinitCompute ();
+}
+
+
 //////////////////////////////////////////////////////////////////////////////////////////////
 template <typename PointT> bool
 pcl::SACSegmentation<PointT>::initSACModel (const int model_type)
@@ -143,7 +353,6 @@ pcl::SACSegmentation<PointT>::initSACModel (const int model_type)
   {
     case SACMODEL_PLANE:
     {
-      pcl::console::print_error ("[addPointCloudPrincipalCurvatures] The number of points differs from the number of principal curvatures/normals!\n");
       PCL_DEBUG ("[pcl::%s::initSACModel] Using a model of type: SACMODEL_PLANE\n", getClassName ().c_str ());
       model_.reset (new SampleConsensusModelPlane<PointT> (input_, *indices_, random_));
       break;
@@ -379,11 +588,6 @@ pcl::SACSegmentationFromNormals<PointT, PointNT>::initSACModel (const int model_
   {
     case SACMODEL_CYLINDER:
     {
-      
-      std::cerr << "header_i: " << std::endl;
-      std::cout << "values_i[]" << std::endl;
-
-      pcl::console::print_error ("[addPointCloudPrincipalCurvatures] The number of points differs from the number of principal curvatures/normals!\n");
       PCL_DEBUG ("[pcl::%s::initSACModel] Using a model of type: SACMODEL_CYLINDER\n", getClassName ().c_str ());
       model_.reset (new SampleConsensusModelCylinder<PointT, PointNT > (input_, *indices_, random_));
       typename SampleConsensusModelCylinder<PointT, PointNT>::Ptr model_cylinder = static_pointer_cast<SampleConsensusModelCylinder<PointT, PointNT> > (model_);
@@ -392,7 +596,26 @@ pcl::SACSegmentationFromNormals<PointT, PointNT>::initSACModel (const int model_
       model_cylinder->setInputNormals (normals_);
       double min_radius, max_radius;
       model_cylinder->getRadiusLimits (min_radius, max_radius);
-
+      if (radius_min_ != min_radius && radius_max_ != max_radius)
+      {
+        PCL_DEBUG ("[pcl::%s::initSACModel] Setting radius limits to %f/%f\n", getClassName ().c_str (), radius_min_, radius_max_);
+        model_cylinder->setRadiusLimits (radius_min_, radius_max_);
+      }
+      if (distance_weight_ != model_cylinder->getNormalDistanceWeight ())
+      {
+        PCL_DEBUG ("[pcl::%s::initSACModel] Setting normal distance weight to %f\n", getClassName ().c_str (), distance_weight_);
+        model_cylinder->setNormalDistanceWeight (distance_weight_);
+      }
+      if (axis_ != Eigen::Vector3f::Zero () && model_cylinder->getAxis () != axis_)
+      {
+        PCL_DEBUG ("[pcl::%s::initSACModel] Setting the axis to %f, %f, %f\n", getClassName ().c_str (), axis_[0], axis_[1], axis_[2]);
+        model_cylinder->setAxis (axis_);
+      }
+      if (eps_angle_ != 0.0 && model_cylinder->getEpsAngle () != eps_angle_)
+      {
+        PCL_DEBUG ("[pcl::%s::initSACModel] Setting the epsilon angle to %f (%f degrees)\n", getClassName ().c_str (), eps_angle_, eps_angle_ * 180.0 / M_PI);
+        model_cylinder->setEpsAngle (eps_angle_);
+      }
       break;
     }
     case SACMODEL_NORMAL_PLANE:

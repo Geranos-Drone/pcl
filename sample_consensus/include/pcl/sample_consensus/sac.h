@@ -309,11 +309,34 @@ namespace pcl
       inline void 
       getInliers (Indices &inliers) const { inliers = inliers_; }
 
+      inline void 
+      getInliers_cylinder (Indices &inliers0,Indices &inliers1,Indices &inliers2,Indices &inliers3,Indices &inliers4,Indices &inliers5,Indices &inliers6) const { 
+        inliers0 = inliers0_;
+        inliers1 = inliers1_;
+        inliers2 = inliers2_;
+        inliers3 = inliers3_;
+        inliers4 = inliers4_;
+        inliers5 = inliers5_;
+        inliers6 = inliers6_;
+      }
+
       /** \brief Return the model coefficients of the best model found so far. 
         * \param[out] model_coefficients the resultant model coefficients, as documented in \ref sample_consensus
         */
       inline void 
       getModelCoefficients (Eigen::VectorXf &model_coefficients) const { model_coefficients = model_coefficients_; }
+
+      inline void 
+      getModelCoefficients_cylinder (Eigen::VectorXf &model_coefficients0,Eigen::VectorXf &model_coefficients1,Eigen::VectorXf &model_coefficients2,Eigen::VectorXf &model_coefficients3,Eigen::VectorXf &model_coefficients4,Eigen::VectorXf &model_coefficients5,Eigen::VectorXf &model_coefficients6) const { 
+        model_coefficients0 = model_coefficients0_; 
+        model_coefficients1 = model_coefficients1_; 
+        model_coefficients2 = model_coefficients2_; 
+        model_coefficients3 = model_coefficients3_; 
+        model_coefficients4 = model_coefficients4_; 
+        model_coefficients5 = model_coefficients5_; 
+        model_coefficients6 = model_coefficients6_; 
+      }
+
 
     protected:
       /** \brief The underlying data model used (i.e. what is it that we attempt to search for). */
@@ -324,9 +347,23 @@ namespace pcl
 
       /** \brief The indices of the points that were chosen as inliers after the last computeModel () call. */
       Indices inliers_;
+      Indices inliers0_;
+      Indices inliers1_;
+      Indices inliers2_;
+      Indices inliers3_;
+      Indices inliers4_;
+      Indices inliers5_;
+      Indices inliers6_;
 
       /** \brief The coefficients of our model computed directly from the model found. */
       Eigen::VectorXf model_coefficients_;
+      Eigen::VectorXf model_coefficients0_;
+      Eigen::VectorXf model_coefficients1_;
+      Eigen::VectorXf model_coefficients2_;
+      Eigen::VectorXf model_coefficients3_;
+      Eigen::VectorXf model_coefficients4_;
+      Eigen::VectorXf model_coefficients5_;
+      Eigen::VectorXf model_coefficients6_;
 
       /** \brief Desired probability of choosing at least one sample free from outliers. */
       double probability_;
