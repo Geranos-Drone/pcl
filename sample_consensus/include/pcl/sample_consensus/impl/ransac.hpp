@@ -68,10 +68,19 @@ pcl::RandomSampleConsensus<PointT>::computeModel (int)
   double k = std::numeric_limits<double>::max();
 
   Indices selection;
+  Indices selection_0;
+  Indices selection_1;
+  Indices selection_2;
+  Indices selection_3;
+  Indices selection_4;
+  Indices selection_5;
+  Indices selection_6;
   Eigen::VectorXf model_coefficients (sac_model_->getModelSize ());
 
   const double log_probability  = std::log (1.0 - probability_);
   const double one_over_indices = 1.0 / static_cast<double> (sac_model_->getIndices ()->size ());
+
+  Eigen::VectorXf n_best_inliers_count_vector = Eigen::VectorXf::Zero(sac_model_->getModelSize ());
 
   unsigned skipped_count = 0;
 
@@ -149,23 +158,91 @@ pcl::RandomSampleConsensus<PointT>::computeModel (int)
 #if OPENMP_AVAILABLE_RANSAC
 #pragma omp atomic read
 #endif
-      n_best_inliers_count_tmp = n_best_inliers_count;
+      //n_best_inliers_count_tmp = n_best_inliers_count;
+      n_best_inliers_count_tmp = n_best_inliers_count_vector(0);
+      if (sac_model_->getModelSize () == 7)
+        n_best_inliers_count_tmp = n_best_inliers_count_vector(6);
 
       if (n_inliers_count > n_best_inliers_count_tmp) // This condition is false most of the time, and the critical region is not entered, hopefully leading to more efficient concurrency
       {
+        int model_similar = 10;
+        if (sac_model_->getModelSize () == 7) //only cylinder segmentation 
+          {
+            points_in_current_selection_ = sac_model_->Return_points_in_selection (); //return values or must it be different function since 
+            
+            for (auto& point: points_in_current_selection_) {
+              for (auto& point_0: point_cloud0_) {
+                if (sqrt((point.x-point_0.x)*(point.x-point_0.x)+(point.y-point_0.y)*(point.y-point_0.y)+(point.z-point_0.z)*(point.z-point_0.z)) < 0.7) {                  
+                  model_similar = 0;
+                  break;
+                }
+              }
+              if (model_similar == 0)
+                  break;
+              for (auto& point_1: point_cloud1_) {
+                if (sqrt((point.x-point_1.x)*(point.x-point_1.x)+(point.y-point_1.y)*(point.y-point_1.y)+(point.z-point_1.z)*(point.z-point_1.z)) < 0.7) {                  
+                  model_similar = 1;
+                  break;
+                }
+              }
+              if (model_similar == 1)
+                break;                
+              for (auto& point_2: point_cloud2_) {
+                if (sqrt((point.x-point_2.x)*(point.x-point_2.x)+(point.y-point_2.y)*(point.y-point_2.y)+(point.z-point_2.z)*(point.z-point_2.z)) < 0.7) {                  
+                  model_similar = 2;
+                  break;
+                }
+              }
+              if (model_similar == 2)
+                break;                
+              for (auto& point_3: point_cloud3_) {
+                if (sqrt((point.x-point_3.x)*(point.x-point_3.x)+(point.y-point_3.y)*(point.y-point_3.y)+(point.z-point_3.z)*(point.z-point_3.z)) < 0.7) {                  
+                  model_similar = 3;
+                  break;
+                }
+              }
+              if (model_similar == 3)
+                break;
+              for (auto& point_4: point_cloud4_) {
+                if (sqrt((point.x-point_4.x)*(point.x-point_4.x)+(point.y-point_4.y)*(point.y-point_4.y)+(point.z-point_4.z)*(point.z-point_4.z)) < 0.7) {                  
+                  model_similar = 4;
+                  break;
+                }
+              }
+              if (model_similar == 4)
+                break;
+              for (auto& point_5: point_cloud5_) {
+                if (sqrt((point.x-point_5.x)*(point.x-point_5.x)+(point.y-point_5.y)*(point.y-point_5.y)+(point.z-point_5.z)*(point.z-point_5.z)) < 0.7) {                  
+                  model_similar = 5;
+                  break;
+                }
+              }
+              if (model_similar == 5)
+                break;
+              for (auto& point_6: point_cloud6_) {
+                if (sqrt((point.x-point_6.x)*(point.x-point_6.x)+(point.y-point_6.y)*(point.y-point_6.y)+(point.z-point_6.z)*(point.z-point_6.z)) < 0.7) {                  
+                  model_similar = 6;
+                  break;
+                }
+              }
+              if (model_similar == 6)
+                break;
+            }
+            std::cerr << "Model similar:"  << model_similar << std::endl;
+          }
 #if OPENMP_AVAILABLE_RANSAC
 #pragma omp critical(update) // n_best_inliers_count, model_, model_coefficients_, k are shared and read/write must be protected
 #endif
         {
           // Better match ?
-          if (n_inliers_count > n_best_inliers_count)
-          {
-            n_best_inliers_count = n_inliers_count; // This write and the previous read of n_best_inliers_count must be consecutive and must not be interrupted!
+          if (sac_model_->getModelSize () != 7 && n_inliers_count > n_best_inliers_count_tmp) {
+            n_best_inliers_count_vector(0) = n_inliers_count; // This write and the previous read of n_best_inliers_count must be consecutive and must not be interrupted!
             n_best_inliers_count_tmp = n_best_inliers_count;
-
-            // Save the current model/inlier/coefficients selection as being the best so far
-            model_              = selection;
-            model_coefficients_ = model_coefficients;
+            n_best_inliers_count = n_inliers_count;
+            
+            inliers0_ = inliers_;
+            model0_ = selection;
+            model_coefficients0_ = model_coefficients;
 
             // Compute the k parameter (k=std::log(z)/std::log(1-w^n))
             const double w = static_cast<double> (n_best_inliers_count) * one_over_indices;
@@ -173,7 +250,155 @@ pcl::RandomSampleConsensus<PointT>::computeModel (int)
             p_outliers = (std::max) (std::numeric_limits<double>::epsilon (), p_outliers);        // Avoid division by -Inf
             p_outliers = (std::min) (1.0 - std::numeric_limits<double>::epsilon (), p_outliers);  // Avoid division by 0.
             k = log_probability / std::log (p_outliers);
+
+            model_similar = 20;
+         }
+          
+          //Fill Matrix and then always kick worst out 
+          //Current selection similar to a previous found selection
+          else if (model_similar == 0 && n_inliers_count > n_best_inliers_count_vector(0)) {
+            point_cloud0_ = points_in_current_selection_;
+            n_best_inliers_count_vector(0) = n_inliers_count;
+            model_coefficients0_ = model_coefficients;
+            model0_ = selection;
           }
+          else if (model_similar == 1 && n_inliers_count > n_best_inliers_count_vector(1)) {
+            point_cloud1_ = points_in_current_selection_;
+            n_best_inliers_count_vector(1) = n_best_inliers_count;
+            model_coefficients1_ = model_coefficients;
+            model1_ = selection;
+          }
+          else if (model_similar == 2 && n_inliers_count > n_best_inliers_count_vector(2)) {
+            point_cloud2_ = points_in_current_selection_;
+            n_best_inliers_count_vector(2) = n_inliers_count;
+            model_coefficients2_ = model_coefficients;
+            model2_ = selection;
+          }
+          else if (model_similar == 3 && n_inliers_count > n_best_inliers_count_vector(3)) {
+            point_cloud3_ = points_in_current_selection_;
+            n_best_inliers_count_vector(3) = n_inliers_count;
+            model_coefficients3_ = model_coefficients;
+            model3_ = selection;
+          }
+          else if (model_similar == 4 && n_inliers_count > n_best_inliers_count_vector(4)) {
+            point_cloud4_ = points_in_current_selection_;
+            n_best_inliers_count_vector(4) = n_inliers_count;
+            model_coefficients4_ = model_coefficients;
+            model4_ = selection;
+          }
+          else if (model_similar == 5 && n_inliers_count > n_best_inliers_count_vector(5)) {
+            point_cloud5_ = points_in_current_selection_;
+            n_best_inliers_count_vector(5) = n_inliers_count;
+            model_coefficients5_ = model_coefficients;
+            model5_ = selection;
+          }
+          else if ((model_similar == 6 || model_similar == 10) && n_inliers_count > n_best_inliers_count_vector(6)) {
+            point_cloud6_ = points_in_current_selection_;
+            n_best_inliers_count_vector(6) = n_inliers_count;
+            model_coefficients6_ = model_coefficients;
+            model6_ = selection;
+          }
+          
+          while (!(n_best_inliers_count_vector(0) >= n_best_inliers_count_vector(1) && n_best_inliers_count_vector(1) >= n_best_inliers_count_vector(2) && n_best_inliers_count_vector(2) >= n_best_inliers_count_vector(3) && n_best_inliers_count_vector(3) >= n_best_inliers_count_vector(4) && n_best_inliers_count_vector(4) >= n_best_inliers_count_vector(5) && n_best_inliers_count_vector(5) >= n_best_inliers_count_vector(6))) {
+            if (sac_model_->getModelSize () != 7) {
+              break;
+            }
+            std::cerr << "while loop was entered";
+            if (n_best_inliers_count_vector(1) > n_best_inliers_count_vector(0)) {
+              point_cloud_ = point_cloud1_;
+              point_cloud1_ = point_cloud0_;
+              point_cloud0_ = point_cloud_;
+              int inliers = n_best_inliers_count_vector(1);
+              n_best_inliers_count_vector(1) = n_best_inliers_count_vector(0);          
+              n_best_inliers_count_vector(0) = inliers;
+              model_coefficients_ = model_coefficients1_;
+              model_coefficients1_ = model_coefficients0_;
+              model_coefficients0_ = model_coefficients_;
+              model_ = model1_;
+              model1_ = model0_;
+              model0_ = model_;
+            }
+            if (n_best_inliers_count_vector(2) > n_best_inliers_count_vector(1)) {
+              point_cloud_ = point_cloud1_;
+              point_cloud1_ = point_cloud2_;
+              point_cloud2_ = point_cloud_;
+              int inliers = n_best_inliers_count_vector(1);
+              n_best_inliers_count_vector(1) = n_best_inliers_count_vector(2);          
+              n_best_inliers_count_vector(2) = inliers;
+              model_coefficients_ = model_coefficients1_;
+              model_coefficients1_ = model_coefficients2_;
+              model_coefficients2_ = model_coefficients_;
+              model_ = model1_;
+              model1_ = model2_;
+              model2_ = model_;
+            }
+            if (n_best_inliers_count_vector(3) > n_best_inliers_count_vector(2)) {
+              point_cloud_ = point_cloud3_;
+              point_cloud3_ = point_cloud2_;
+              point_cloud2_ = point_cloud_;
+              int inliers = n_best_inliers_count_vector(3);
+              n_best_inliers_count_vector(3) = n_best_inliers_count_vector(2);          
+              n_best_inliers_count_vector(2) = inliers;
+              model_coefficients_ = model_coefficients3_;
+              model_coefficients3_ = model_coefficients2_;
+              model_coefficients2_ = model_coefficients_;
+              model_ = model3_;
+              model3_ = model2_;
+              model2_ = model_;
+            }
+            if (n_best_inliers_count_vector(4) > n_best_inliers_count_vector(3)) {
+              point_cloud_ = point_cloud3_;
+              point_cloud3_ = point_cloud4_;
+              point_cloud4_ = point_cloud_;
+              int inliers = n_best_inliers_count_vector(3);
+              n_best_inliers_count_vector(3) = n_best_inliers_count_vector(4);          
+              n_best_inliers_count_vector(4) = inliers;
+              model_coefficients_ = model_coefficients3_;
+              model_coefficients3_ = model_coefficients4_;
+              model_coefficients4_ = model_coefficients_;
+              model_ = model3_;
+              model3_ = model4_;
+              model4_ = model_;
+            }
+            if (n_best_inliers_count_vector(5) > n_best_inliers_count_vector(4)) {
+              point_cloud_ = point_cloud5_;
+              point_cloud5_ = point_cloud4_;
+              point_cloud4_ = point_cloud_;
+              int inliers = n_best_inliers_count_vector(5);
+              n_best_inliers_count_vector(5) = n_best_inliers_count_vector(4);          
+              n_best_inliers_count_vector(4) = inliers;
+              model_coefficients_ = model_coefficients5_;
+              model_coefficients5_ = model_coefficients4_;
+              model_coefficients4_ = model_coefficients_;
+              model_ = model5_;
+              model5_ = model4_;
+              model4_ = model_;
+            }
+            if (n_best_inliers_count_vector(6) > n_best_inliers_count_vector(5)) {
+              point_cloud_ = point_cloud5_;
+              point_cloud5_ = point_cloud6_;
+              point_cloud6_ = point_cloud5_;
+              int inliers = n_best_inliers_count_vector(5);
+              n_best_inliers_count_vector(5) = n_best_inliers_count_vector(6);          
+              n_best_inliers_count_vector(6) = inliers;
+              model_coefficients_ = model_coefficients5_;
+              model_coefficients5_ = model_coefficients6_;
+              model_coefficients6_ = model_coefficients_;
+              model_ = model5_;
+              model5_ = model6_;
+              model6_ = model_;
+            }
+          }
+          std::cerr << n_best_inliers_count_vector << std::endl;
+
+/*
+            // Compute the k parameter (k=std::log(z)/std::log(1-w^n))
+            const double w = static_cast<double> (n_best_inliers_count) * one_over_indices;
+            double p_outliers = 1.0 - std::pow (w, static_cast<double> (selection.size ()));      // Probability that selection is contaminated by at least one outlier
+            p_outliers = (std::max) (std::numeric_limits<double>::epsilon (), p_outliers);        // Avoid division by -Inf
+            p_outliers = (std::min) (1.0 - std::numeric_limits<double>::epsilon (), p_outliers);  // Avoid division by 0.
+            k = log_probability / std::log (p_outliers); */
+
         } // omp critical
       }
 
@@ -192,8 +417,8 @@ pcl::RandomSampleConsensus<PointT>::computeModel (int)
 #else
       PCL_DEBUG ("[pcl::RandomSampleConsensus::computeModel] Trial %d out of %f: %u inliers (best is: %u so far).\n", iterations_tmp, k_tmp, n_inliers_count, n_best_inliers_count_tmp);
 #endif
-      if (iterations_tmp > k_tmp)
-        break;
+      //if (iterations_tmp > k_tmp)
+        //break;
       if (iterations_tmp > max_iterations_)
       {
         PCL_DEBUG ("[pcl::RandomSampleConsensus::computeModel] RANSAC reached the maximum number of trials.\n");
@@ -204,15 +429,65 @@ pcl::RandomSampleConsensus<PointT>::computeModel (int)
 
   PCL_DEBUG ("[pcl::RandomSampleConsensus::computeModel] Model: %lu size, %u inliers.\n", model_.size (), n_best_inliers_count);
 
-  if (model_.empty ())
+  // Get the set of inliers that correspond to the found models
+  if (model0_.empty ())
   {
-    PCL_ERROR ("[pcl::RandomSampleConsensus::computeModel] RANSAC found no model.\n");
-    inliers_.clear ();
+    PCL_ERROR ("[pcl::RandomSampleConsensus::computeModel] RANSAC found no model 0.\n");
+    inliers0_.clear ();
     return (false);
   }
+  else {
+    sac_model_->selectWithinDistance (model_coefficients0_, threshold_, inliers0_);    
+  }
 
-  // Get the set of inliers that correspond to the best model found so far
-  sac_model_->selectWithinDistance (model_coefficients_, threshold_, inliers_);
+  if (!model1_.empty () && sac_model_->getModelSize () == 7)
+  {
+    sac_model_->selectWithinDistance (model_coefficients1_, threshold_, inliers1_);    
+  }
+  else {
+    inliers1_.clear ();
+  }
+
+  if (!model2_.empty () && sac_model_->getModelSize () == 7)
+  {
+    sac_model_->selectWithinDistance (model_coefficients2_, threshold_, inliers2_);    
+  }
+  else {
+    inliers2_.clear ();
+  }
+  
+  if (!model3_.empty () && sac_model_->getModelSize () == 7)
+  {
+    sac_model_->selectWithinDistance (model_coefficients3_, threshold_, inliers3_);    
+  }
+  else {
+    inliers3_.clear ();
+  }
+  
+  if (!model4_.empty () && sac_model_->getModelSize () == 7)
+  {
+    sac_model_->selectWithinDistance (model_coefficients4_, threshold_, inliers4_);    
+  }
+  else {
+    inliers4_.clear ();
+  }
+
+  if (!model5_.empty () && sac_model_->getModelSize () == 7)
+  {
+    sac_model_->selectWithinDistance (model_coefficients5_, threshold_, inliers5_);    
+  }
+  else {
+    inliers5_.clear ();
+  }
+  
+  if (!model6_.empty () && sac_model_->getModelSize () == 7)
+  {
+    sac_model_->selectWithinDistance (model_coefficients6_, threshold_, inliers6_);    
+  }
+  else {
+    inliers6_.clear ();
+  }
+  
   return (true);
 }
 

@@ -106,11 +106,11 @@ pcl::SACSegmentation<PointT>::segment (PointIndices &inliers, ModelCoefficients 
   }
 
   // Get the model inliers
-  sac_->getInliers (inliers.indices);
+  sac_->getInliers0_ (inliers.indices);
 
   // Get the model coefficients
   Eigen::VectorXf coeff (model_->getModelSize ());
-  sac_->getModelCoefficients (coeff);
+  sac_->getModelCoefficients0_ (coeff);
 
   // If the user needs optimized coefficients
   if (optimize_coefficients_)
@@ -331,7 +331,7 @@ pcl::SACSegmentation<PointT>::segment_several (PointIndices &inliers_0, PointInd
     model_->selectWithinDistance (coeff_refined_6, threshold_, inliers_6.indices);
   }
   else {
-    model_coefficients6_.values.resize (coeff_6.size ());
+    model_coefficients_6.values.resize (coeff_6.size ());
     memcpy (&model_coefficients_6.values[0], &coeff_6[0], coeff_6.size () * sizeof (float));
   } 
 

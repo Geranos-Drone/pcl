@@ -308,6 +308,9 @@ namespace pcl
         */
       inline void 
       getInliers (Indices &inliers) const { inliers = inliers_; }
+      
+      inline void 
+      getInliers0_ (Indices &inliers) const { inliers = inliers0_; }
 
       inline void 
       getInliers_cylinder (Indices &inliers0,Indices &inliers1,Indices &inliers2,Indices &inliers3,Indices &inliers4,Indices &inliers5,Indices &inliers6) const { 
@@ -327,6 +330,9 @@ namespace pcl
       getModelCoefficients (Eigen::VectorXf &model_coefficients) const { model_coefficients = model_coefficients_; }
 
       inline void 
+      getModelCoefficients0_ (Eigen::VectorXf &model_coefficients) const { model_coefficients = model_coefficients0_; }
+
+      inline void 
       getModelCoefficients_cylinder (Eigen::VectorXf &model_coefficients0,Eigen::VectorXf &model_coefficients1,Eigen::VectorXf &model_coefficients2,Eigen::VectorXf &model_coefficients3,Eigen::VectorXf &model_coefficients4,Eigen::VectorXf &model_coefficients5,Eigen::VectorXf &model_coefficients6) const { 
         model_coefficients0 = model_coefficients0_; 
         model_coefficients1 = model_coefficients1_; 
@@ -344,6 +350,13 @@ namespace pcl
 
       /** \brief The model found after the last computeModel () as point cloud indices. */
       Indices model_;
+      Indices model0_;
+      Indices model1_;
+      Indices model2_;
+      Indices model3_;
+      Indices model4_;
+      Indices model5_;
+      Indices model6_;
 
       /** \brief The indices of the points that were chosen as inliers after the last computeModel () call. */
       Indices inliers_;

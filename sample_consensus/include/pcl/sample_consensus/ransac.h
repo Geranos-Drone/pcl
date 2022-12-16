@@ -42,6 +42,7 @@
 
 #include <pcl/sample_consensus/sac.h>
 #include <pcl/sample_consensus/sac_model.h>
+#include <pcl/pcl_config.h>
 
 namespace pcl
 {
@@ -69,16 +70,50 @@ namespace pcl
     public:
       using Ptr = shared_ptr<RandomSampleConsensus<PointT> >;
       using ConstPtr = shared_ptr<const RandomSampleConsensus<PointT> >;
+      using PointCloud = pcl::PointCloud<PointT>;
 
       using SampleConsensus<PointT>::max_iterations_;
       using SampleConsensus<PointT>::threshold_;
       using SampleConsensus<PointT>::iterations_;
       using SampleConsensus<PointT>::sac_model_;
       using SampleConsensus<PointT>::model_;
+      using SampleConsensus<PointT>::model0_;
+      using SampleConsensus<PointT>::model1_;
+      using SampleConsensus<PointT>::model2_;
+      using SampleConsensus<PointT>::model3_;
+      using SampleConsensus<PointT>::model4_;
+      using SampleConsensus<PointT>::model5_;
+      using SampleConsensus<PointT>::model6_;
+
       using SampleConsensus<PointT>::model_coefficients_;
+      using SampleConsensus<PointT>::model_coefficients0_;
+      using SampleConsensus<PointT>::model_coefficients1_;
+      using SampleConsensus<PointT>::model_coefficients2_;
+      using SampleConsensus<PointT>::model_coefficients3_;
+      using SampleConsensus<PointT>::model_coefficients4_;
+      using SampleConsensus<PointT>::model_coefficients5_;
+      using SampleConsensus<PointT>::model_coefficients6_;
+
       using SampleConsensus<PointT>::inliers_;
+      using SampleConsensus<PointT>::inliers0_;
+      using SampleConsensus<PointT>::inliers1_;
+      using SampleConsensus<PointT>::inliers2_;
+      using SampleConsensus<PointT>::inliers3_;
+      using SampleConsensus<PointT>::inliers4_;
+      using SampleConsensus<PointT>::inliers5_;
+      using SampleConsensus<PointT>::inliers6_;
       using SampleConsensus<PointT>::probability_;
       using SampleConsensus<PointT>::threads_;
+
+      PointCloud points_in_current_selection_;
+      PointCloud point_cloud0_;
+      PointCloud point_cloud1_;
+      PointCloud point_cloud2_;
+      PointCloud point_cloud3_;
+      PointCloud point_cloud4_;
+      PointCloud point_cloud5_;
+      PointCloud point_cloud6_;
+      PointCloud point_cloud_;
 
       /** \brief RANSAC (RANdom SAmple Consensus) main constructor
         * \param[in] model a Sample Consensus model
