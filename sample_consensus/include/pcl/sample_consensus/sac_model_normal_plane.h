@@ -94,6 +94,8 @@ namespace pcl
       using Ptr = shared_ptr<SampleConsensusModelNormalPlane<PointT, PointNT> >;
       using ConstPtr = shared_ptr<const SampleConsensusModelNormalPlane<PointT, PointNT>>;
 
+      mutable PointCloud points_;
+
       /** \brief Constructor for base SampleConsensusModelNormalPlane.
         * \param[in] cloud the input point cloud dataset
         * \param[in] random if true set the random seed to the current time, else set to 12345 (default: false)
@@ -158,7 +160,11 @@ namespace pcl
       /** \brief Return a unique id for this model (SACMODEL_NORMAL_PLANE). */
       inline pcl::SacModel 
       getModelType () const override { return (SACMODEL_NORMAL_PLANE); }
-
+ 
+      // return all points included as inliers to compare with previous found samples 
+      inline PointCloud
+      Return_points_in_selection () const override { return (points_); }
+ 
     	PCL_MAKE_ALIGNED_OPERATOR_NEW
 
     protected:

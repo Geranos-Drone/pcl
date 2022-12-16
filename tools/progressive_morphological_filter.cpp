@@ -248,7 +248,7 @@ main (int argc, char** argv)
   switch (verbosity_level)
   {
     case 0:
-      pcl::console::setVerbosityLevel(pcl::console::L_ALWAY);
+      pcl::console::setVerbosityLevel(pcl::console::L_ALWAYS);
       break;
 
     case 1:

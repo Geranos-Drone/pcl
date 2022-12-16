@@ -79,6 +79,8 @@ namespace pcl
       using Ptr = shared_ptr<SampleConsensusModelPerpendicularPlane<PointT> >;
       using ConstPtr = shared_ptr<const SampleConsensusModelPerpendicularPlane<PointT>>;
 
+      mutable PointCloud points_;
+
       /** \brief Constructor for base SampleConsensusModelPerpendicularPlane.
         * \param[in] cloud the input point cloud dataset
         * \param[in] random if true set the random seed to the current time, else set to 12345 (default: false)
@@ -167,6 +169,10 @@ namespace pcl
       inline pcl::SacModel 
       getModelType () const override { return (SACMODEL_PERPENDICULAR_PLANE); }
 
+      // return all points included as inliers to compare with previous found samples 
+      inline PointCloud
+      Return_points_in_selection () const override { return (points_); }
+ 
     protected:
       using SampleConsensusModel<PointT>::sample_size_;
       using SampleConsensusModel<PointT>::model_size_;

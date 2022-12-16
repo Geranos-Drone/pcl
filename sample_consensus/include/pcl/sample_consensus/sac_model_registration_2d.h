@@ -70,6 +70,8 @@ namespace pcl
       using Ptr = shared_ptr<SampleConsensusModelRegistration2D<PointT> >;
       using ConstPtr = shared_ptr<const SampleConsensusModelRegistration2D<PointT> >;
 
+      mutable PointCloud points_;
+
       /** \brief Constructor for base SampleConsensusModelRegistration2D.
         * \param[in] cloud the input point cloud dataset
         * \param[in] random if true set the random seed to the current time, else set to 12345 (default: false)

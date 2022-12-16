@@ -77,6 +77,8 @@ namespace pcl
       using Ptr = shared_ptr<SampleConsensusModel<PointT> >;
       using ConstPtr = shared_ptr<const SampleConsensusModel<PointT> >;
 
+      mutable PointCloud points_;
+
     protected:
       /** \brief Empty constructor for base SampleConsensusModel.
         * \param[in] random if true set the random seed to the current time, else set to 12345 (default: false)
@@ -343,6 +345,10 @@ namespace pcl
       /** \brief Return a unique id for each type of model employed. */
       virtual SacModel 
       getModelType () const = 0;
+
+      // return all points included as inliers to compare with previous found samples 
+      virtual PointCloud
+      Return_points_in_selection () const = 0;
 
       /** \brief Get a string representation of the name of this class. */
       inline const std::string&

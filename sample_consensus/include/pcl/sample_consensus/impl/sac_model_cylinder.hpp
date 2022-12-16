@@ -247,6 +247,10 @@ pcl::SampleConsensusModelCylinder<PointT, PointNT>::countWithinDistance (
 
   std::size_t nr_p = 0;
 
+  std::vector<float> vector_point_x;
+  std::vector<float> vector_point_y;
+  std::vector<float> vector_point_z;
+
   Eigen::Vector4f line_pt  (model_coefficients[0], model_coefficients[1], model_coefficients[2], 0);
   Eigen::Vector4f line_dir (model_coefficients[3], model_coefficients[4], model_coefficients[5], 0);
   float ptdotdir = line_pt.dot (line_dir);
@@ -272,8 +276,22 @@ pcl::SampleConsensusModelCylinder<PointT, PointNT>::countWithinDistance (
     double d_normal = std::abs (getAngle3D (n, dir));
     d_normal = (std::min) (d_normal, M_PI - d_normal);
 
-    if (std::abs (normal_distance_weight_ * d_normal + weighted_euclid_dist) < threshold)
+    if (std::abs (normal_distance_weight_ * d_normal + weighted_euclid_dist) < threshold) {
       nr_p++;
+      vector_point_x.push_back ((*input_)[(*indices_)[i]].x);
+      vector_point_y.push_back ((*input_)[(*indices_)[i]].y);
+      vector_point_z.push_back ((*input_)[(*indices_)[i]].z);
+    }
+  }
+  
+  int nrp = nr_p;
+
+  points_.resize(nrp);
+
+  for (int ii = 0; ii < nrp; ++ii) {
+    points_[ii].x = vector_point_x[ii];
+    points_[ii].y = vector_point_y[ii];
+    points_[ii].z = vector_point_z[ii];
   }
   return (nr_p);
 }
