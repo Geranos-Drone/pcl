@@ -228,7 +228,6 @@ pcl::RandomSampleConsensus<PointT>::computeModel (int)
               if (model_similar == 6)
                 break;
             }
-            std::cerr << "Model similar:"  << model_similar << std::endl;
           }
 #if OPENMP_AVAILABLE_RANSAC
 #pragma omp critical(update) // n_best_inliers_count, model_, model_coefficients_, k are shared and read/write must be protected
@@ -303,7 +302,6 @@ pcl::RandomSampleConsensus<PointT>::computeModel (int)
             if (sac_model_->getModelSize () != 7) {
               break;
             }
-            std::cerr << "while loop was entered";
             if (n_best_inliers_count_vector(1) > n_best_inliers_count_vector(0)) {
               point_cloud_ = point_cloud1_;
               point_cloud1_ = point_cloud0_;
@@ -389,7 +387,6 @@ pcl::RandomSampleConsensus<PointT>::computeModel (int)
               model6_ = model_;
             }
           }
-          std::cerr << n_best_inliers_count_vector << std::endl;
 
 /*
             // Compute the k parameter (k=std::log(z)/std::log(1-w^n))
