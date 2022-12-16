@@ -346,9 +346,9 @@ main(int argc, char** argv)
   bool debug = false;
   pcl::console::parse_argument(argc, argv, "-debug", debug);
   if (debug)
-    pcl::console::setVerbosityLevel(pcl::console::L_VERBOSE);
+    pcl::console::setVerbosityLevel(pcl::console::L_DEBUG);
   else
-    pcl::console::setVerbosityLevel(pcl::console::L_VERBOSE);
+    pcl::console::setVerbosityLevel(pcl::console::L_DEBUG);
 
   std::string device_id("#1");
   OpenNIGrabber grabber(device_id);
@@ -360,3 +360,4 @@ main(int argc, char** argv)
   return 0;
 }
 /* ]--- */
+z

@@ -52,7 +52,6 @@ pcl::getMinMax3D (const pcl::PCLPointCloud2ConstPtr &cloud, int x_idx, int y_idx
                   Eigen::Vector4f &min_pt, Eigen::Vector4f &max_pt)
 {
   // @todo fix this
-  std::cout << "maybe hopefully"<< std::endl;
   if (cloud->fields[x_idx].datatype != pcl::PCLPointField::FLOAT32 ||
       cloud->fields[y_idx].datatype != pcl::PCLPointField::FLOAT32 ||
       cloud->fields[z_idx].datatype != pcl::PCLPointField::FLOAT32)
@@ -99,8 +98,6 @@ pcl::getMinMax3D (const pcl::PCLPointCloud2ConstPtr &cloud, int x_idx, int y_idx
                   Eigen::Vector4f &min_pt, Eigen::Vector4f &max_pt, bool limit_negative)
 {
   // @todo fix this
-  std::cout << "maybe hopefully"<< std::endl;
-
   if (cloud->fields[x_idx].datatype != pcl::PCLPointField::FLOAT32 ||
       cloud->fields[y_idx].datatype != pcl::PCLPointField::FLOAT32 ||
       cloud->fields[z_idx].datatype != pcl::PCLPointField::FLOAT32)
@@ -181,9 +178,7 @@ pcl::getMinMax3D (const pcl::PCLPointCloud2ConstPtr &cloud, int x_idx, int y_idx
 void
 pcl::VoxelGrid<pcl::PCLPointCloud2>::applyFilter (PCLPointCloud2 &output)
 {
-  // If fields x/y/z are not present, we cannot downsample
-  std::cout << "maybe hopefully"<< std::endl;
-  
+  // If fields x/y/z are not present, we cannot downsample  
   if (x_idx_ == UNAVAILABLE || y_idx_ == UNAVAILABLE || z_idx_ == UNAVAILABLE)
   {
     PCL_ERROR ("[pcl::%s::applyFilter] Input dataset doesn't have x-y-z coordinates!\n", getClassName ().c_str ());
