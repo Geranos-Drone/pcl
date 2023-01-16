@@ -216,6 +216,25 @@ pcl::SACSegmentation<PointT>::segment_several (PointIndices &inliers_0, PointInd
   std::vector<float> myvector_5(&coeff_5[0], coeff_5.data()+coeff_5.cols()*coeff_5.rows());
   std::vector<float> myvector_6(&coeff_6[0], coeff_6.data()+coeff_6.cols()*coeff_6.rows());
 
+  //std::cerr << "sac_segmentation.hpp start: " << inliers_0.indices.size() << " " << inliers_1.indices.size() << " " << inliers_2.indices.size() << " " << inliers_3.indices.size() << " " << inliers_4.indices.size() << " " << inliers_5.indices.size() << " " << inliers_6.indices.size() << std::endl;
+
+  //optimize_coefficients_ = 0; //otherwise returns not all poles
+  ModelCoefficients backup_MC0 = model_coefficients_0;
+  PointIndices Backup_I0 = inliers_0;
+  ModelCoefficients backup_MC1 = model_coefficients_1;
+  PointIndices Backup_I1 = inliers_1;
+  ModelCoefficients backup_MC2 = model_coefficients_2;
+  PointIndices Backup_I2 = inliers_2;
+  ModelCoefficients backup_MC3 = model_coefficients_3;
+  PointIndices Backup_I3 = inliers_3;
+  ModelCoefficients backup_MC4 = model_coefficients_4;
+  PointIndices Backup_I4 = inliers_4;
+  ModelCoefficients backup_MC5 = model_coefficients_5;
+  PointIndices Backup_I5 = inliers_5;
+  ModelCoefficients backup_MC6 = model_coefficients_6;
+  PointIndices Backup_I6 = inliers_6;
+
+
   //Vector 0
   if (myvector_0.empty())
   {
@@ -335,8 +354,6 @@ pcl::SACSegmentation<PointT>::segment_several (PointIndices &inliers_0, PointInd
     memcpy (&model_coefficients_6.values[0], &coeff_6[0], coeff_6.size () * sizeof (float));
   } 
 
-  //BLABLA More to come
-  std::cerr << "sac_segmentation.hpp segment done" << std::endl;
   deinitCompute ();
 }
 

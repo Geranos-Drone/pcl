@@ -357,6 +357,7 @@ namespace pcl
       Indices model4_;
       Indices model5_;
       Indices model6_;
+      Indices model8_;
 
       /** \brief The indices of the points that were chosen as inliers after the last computeModel () call. */
       Indices inliers_;
@@ -377,6 +378,7 @@ namespace pcl
       Eigen::VectorXf model_coefficients4_;
       Eigen::VectorXf model_coefficients5_;
       Eigen::VectorXf model_coefficients6_;
+      Eigen::VectorXf model_coefficients8_;
 
       /** \brief Desired probability of choosing at least one sample free from outliers. */
       double probability_;

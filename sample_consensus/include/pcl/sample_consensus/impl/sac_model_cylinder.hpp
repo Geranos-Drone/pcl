@@ -262,9 +262,18 @@ pcl::SampleConsensusModelCylinder<PointT, PointNT>::countWithinDistance (
     // dist(point,cylinder_axis) and cylinder radius
     Eigen::Vector4f pt ((*input_)[(*indices_)[i]].x, (*input_)[(*indices_)[i]].y, (*input_)[(*indices_)[i]].z, 0.0f);
     const double weighted_euclid_dist = (1.0 - normal_distance_weight_) * std::abs (pointToLineDistance (pt, model_coefficients) - model_coefficients[6]);
+    
+    double distance_two_points = sqrt((model_coefficients[0]-(*input_)[(*indices_)[i]].x)*(model_coefficients[0]-(*input_)[(*indices_)[i]].x)+(model_coefficients[1]-(*input_)[(*indices_)[i]].y)*(model_coefficients[1]-(*input_)[(*indices_)[i]].y));
+    if ((distance_two_points > 0.25) && (distance_two_points < 0.755)) { //pole cannot be freestanding
+      nr_p = 0;
+      break;
+    }
+
     if (weighted_euclid_dist > threshold) // Early termination: cannot be an inlier
       continue;
 
+    //std::cerr << "über freestanding ding hinaus" << model_coefficients[0] << std::endl;
+    
     // Calculate the point's projection on the cylinder axis
     float k = (pt.dot (line_dir) - ptdotdir) * dirdotdir;
     Eigen::Vector4f pt_proj = line_pt + k * line_dir;
@@ -275,7 +284,7 @@ pcl::SampleConsensusModelCylinder<PointT, PointNT>::countWithinDistance (
     Eigen::Vector4f n  ((*normals_)[(*indices_)[i]].normal[0], (*normals_)[(*indices_)[i]].normal[1], (*normals_)[(*indices_)[i]].normal[2], 0.0f);
     double d_normal = std::abs (getAngle3D (n, dir));
     d_normal = (std::min) (d_normal, M_PI - d_normal);
-
+    
     if (std::abs (normal_distance_weight_ * d_normal + weighted_euclid_dist) < threshold) {
       nr_p++;
       vector_point_x.push_back ((*input_)[(*indices_)[i]].x);

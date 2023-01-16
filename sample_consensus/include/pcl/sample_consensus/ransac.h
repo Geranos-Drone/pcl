@@ -84,6 +84,7 @@ namespace pcl
       using SampleConsensus<PointT>::model4_;
       using SampleConsensus<PointT>::model5_;
       using SampleConsensus<PointT>::model6_;
+      using SampleConsensus<PointT>::model8_;
 
       using SampleConsensus<PointT>::model_coefficients_;
       using SampleConsensus<PointT>::model_coefficients0_;
@@ -93,6 +94,7 @@ namespace pcl
       using SampleConsensus<PointT>::model_coefficients4_;
       using SampleConsensus<PointT>::model_coefficients5_;
       using SampleConsensus<PointT>::model_coefficients6_;
+      using SampleConsensus<PointT>::model_coefficients8_;
 
       using SampleConsensus<PointT>::inliers_;
       using SampleConsensus<PointT>::inliers0_;
@@ -113,7 +115,9 @@ namespace pcl
       PointCloud point_cloud4_;
       PointCloud point_cloud5_;
       PointCloud point_cloud6_;
+      PointCloud point_cloud8_;
       PointCloud point_cloud_;
+      PointCloud point_cloud_not_frees;
 
       /** \brief RANSAC (RANdom SAmple Consensus) main constructor
         * \param[in] model a Sample Consensus model
