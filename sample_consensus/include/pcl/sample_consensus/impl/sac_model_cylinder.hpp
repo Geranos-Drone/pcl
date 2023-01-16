@@ -246,6 +246,7 @@ pcl::SampleConsensusModelCylinder<PointT, PointNT>::countWithinDistance (
     return (0);
 
   std::size_t nr_p = 0;
+  int points_around_pole = 0;
 
   std::vector<float> vector_point_x;
   std::vector<float> vector_point_y;
@@ -265,6 +266,10 @@ pcl::SampleConsensusModelCylinder<PointT, PointNT>::countWithinDistance (
     
     double distance_two_points = sqrt((model_coefficients[0]-(*input_)[(*indices_)[i]].x)*(model_coefficients[0]-(*input_)[(*indices_)[i]].x)+(model_coefficients[1]-(*input_)[(*indices_)[i]].y)*(model_coefficients[1]-(*input_)[(*indices_)[i]].y));
     if ((distance_two_points > 0.25) && (distance_two_points < 0.755)) { //pole cannot be freestanding
+      ++points_around_pole; 
+    }
+
+    if (points_around_pole > 100) {
       nr_p = 0;
       break;
     }
