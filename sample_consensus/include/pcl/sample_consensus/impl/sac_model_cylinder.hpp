@@ -269,7 +269,7 @@ pcl::SampleConsensusModelCylinder<PointT, PointNT>::countWithinDistance (
       ++points_around_pole; 
     }
 
-    if (points_around_pole > 100) {
+    if (points_around_pole > 500) {
       nr_p = 0;
       break;
     }
