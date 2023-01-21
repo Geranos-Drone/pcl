@@ -67,6 +67,11 @@ pcl::SampleConsensusModelCylinder<PointT, PointNT>::isSampleGood (const Indices 
     PCL_ERROR ("[pcl::SampleConsensusModelCylinder::isSampleGood] The two sample points are (almost) identical!\n");
     return (false);
   }
+  
+  double distance = sqrt(((*input_)[samples[0]].x - (*input_)[samples[1]].x)*((*input_)[samples[0]].x - (*input_)[samples[1]].x) + ((*input_)[samples[0]].y - (*input_)[samples[1]].y)*((*input_)[samples[0]].y - (*input_)[samples[1]].y));
+  if(distance > 0.25 && distance < 0.755) {
+    return false;
+  }
 
   return (true);
 }
@@ -263,9 +268,12 @@ pcl::SampleConsensusModelCylinder<PointT, PointNT>::countWithinDistance (
     Eigen::Vector4f pt ((*input_)[(*indices_)[i]].x, (*input_)[(*indices_)[i]].y, (*input_)[(*indices_)[i]].z, 0.0f);
     const double weighted_euclid_dist = (1.0 - normal_distance_weight_) * std::abs (pointToLineDistance (pt, model_coefficients) - model_coefficients[6]);
     
-    double distance_two_points = sqrt((model_coefficients[0]-(*input_)[(*indices_)[i]].x)*(model_coefficients[0]-(*input_)[(*indices_)[i]].x)+(model_coefficients[1]-(*input_)[(*indices_)[i]].y)*(model_coefficients[1]-(*input_)[(*indices_)[i]].y));
+    double dis_x = model_coefficients[0]-(*input_)[(*indices_)[i]].x;
+    double dis_y = model_coefficients[1]-(*input_)[(*indices_)[i]].y;
+    double distance_two_points = sqrt(dis_x*dis_x+dis_y*dis_y);
     if ((distance_two_points > 0.25) && (distance_two_points < 0.755)) { //pole cannot be freestanding
       nr_p = 0;
+      //erase point in selection?
       break;
     }
 
