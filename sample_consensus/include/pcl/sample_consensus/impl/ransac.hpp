@@ -334,15 +334,15 @@ pcl::RandomSampleConsensus<PointT>::computeModel (int)
             inliers0_ = inliers_;
             model0_ = selection;
             model_coefficients0_ = model_coefficients;
-
-            /* Compute the k parameter (k=std::log(z)/std::log(1-w^n))
+            //std::cerr << iterations_ << " ";
+            //Compute the k parameter (k=std::log(z)/std::log(1-w^n))
             const double w = static_cast<double> (n_best_inliers_count) * one_over_indices;
             double p_outliers = 1.0 - std::pow (w, static_cast<double> (selection.size ()));      // Probability that selection is contaminated by at least one outlier
             p_outliers = (std::max) (std::numeric_limits<double>::epsilon (), p_outliers);        // Avoid division by -Inf
             p_outliers = (std::min) (1.0 - std::numeric_limits<double>::epsilon (), p_outliers);  // Avoid division by 0.
             k = log_probability / std::log (p_outliers);
-            std::cerr << "k_tmp: " << k << std::endl;
-            std::cerr << "iterations_tmp: " << iterations_ + 1 << std::endl; */
+            //std::cerr << "k_tmp: " << k << std::endl;
+            //std::cerr << "iterations_tmp: " << iterations_ + 1 << std::endl;
             model_similar = 20;
          }
           
@@ -511,8 +511,8 @@ pcl::RandomSampleConsensus<PointT>::computeModel (int)
 #else
       PCL_DEBUG ("[pcl::RandomSampleConsensus::computeModel] Trial %d out of %f: %u inliers (best is: %u so far).\n", iterations_tmp, k_tmp, n_inliers_count, n_best_inliers_count_tmp);
 #endif
-      //if (iterations_tmp > k_tmp)
-        //break;
+      if (iterations_tmp > k_tmp && sac_model_->getModelSize () != 7)
+        break;
       if (iterations_tmp > max_iterations_)
       {
         PCL_DEBUG ("[pcl::RandomSampleConsensus::computeModel] RANSAC reached the maximum number of trials.\n");
