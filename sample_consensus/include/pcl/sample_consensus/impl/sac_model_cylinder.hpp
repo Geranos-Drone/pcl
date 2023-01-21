@@ -67,6 +67,11 @@ pcl::SampleConsensusModelCylinder<PointT, PointNT>::isSampleGood (const Indices 
     PCL_ERROR ("[pcl::SampleConsensusModelCylinder::isSampleGood] The two sample points are (almost) identical!\n");
     return (false);
   }
+  
+  double distance = sqrt(((*input_)[samples[0]].x - (*input_)[samples[1]].x)*((*input_)[samples[0]].x - (*input_)[samples[1]].x) + ((*input_)[samples[0]].y - (*input_)[samples[1]].y)*((*input_)[samples[0]].y - (*input_)[samples[1]].y));
+  if(distance > 0.25 && distance < 0.755) {
+    return false;
+  }
 
   return (true);
 }
